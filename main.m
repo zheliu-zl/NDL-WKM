@@ -1,35 +1,14 @@
 clear all; clc;
- Data = load("datasets\foresttype.txt");  Y = Data(:,end);
- Data = mapminmax(Data',0,1); Data = Data';Data(:,end) = Y;
- view = 2; features = [9 18];
- left = 1;right=0; X=cell(1,view);
- for i=1:view
-     X{i} = Data(:, left:features(i)+right);
-     left = features(i)+right+1;
-     right = features(i)+right;
- end
+ 
 
-% load datasets\MSRC-v1.mat
-% Y = Y + 1;
-% data = X;
-% view = 3;
-% features = [24,256,254];
-% X = {};
-% X1 = mapminmax(data{1},0,1);
-% X{1} = X1;
-% X1 = mapminmax(data{3},0,1);
-% X{2} = X1;
-% X1 = mapminmax(data{4},0,1);
-% X{3} = X1;
-
-% load datasets\SensIT.mat
-% Y = label;data = cell(2);
-% data{1} = Acou;data{2} = Seis;
-% view = 2; features = [50,50];
-% for i =1:view
-%     X1 = mapminmax(data{i}',0,1);
-%     X{i} = X1';
-% end
+load datasets\SensIT.mat
+Y = label;data = cell(2);
+data{1} = Acou;data{2} = Seis;
+view = 2; features = [50,50];
+for i =1:view
+    X1 = mapminmax(data{i}',0,1);
+    X{i} = X1';
+end
 
 metrics = [];
 %% initialization
@@ -75,4 +54,5 @@ result = CalcMeasures(Y, result_label);
 [P, R1, F, RI, FM, new_target] = Evaluate(Y, result_label);
 fprintf("ACC:%f, NMI:%f, P:%f, R:%f, F:%f, RI:%f, FM:%f, J:%f\n", ...
     result(1), result(2), P, R1, F, RI, FM, new_target);
+
 metrics = [metrics; [result(1), result(2), P, R1, F, RI, FM, new_target]];
